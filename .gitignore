@@ -1,1 +1,31 @@
 ECHO is on.
+# Node modules
+node_modules/
+
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# OS-specific files
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
+# Build directories
+/dist
+/build
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Compiled files
+__pycache__/
+*.py[cod]
+*.class
