@@ -1,12 +1,14 @@
-# Ignore node_modules directory
-node_modules/
-
 # Ignore all .log files
 *.log
+
+# Ignore the node_modules directory
+node_modules/
 
 # Ignore environment variable files
 .env
 
-# Ignore any temporary files
+# Ignore all files in the temp directory
 temp/
-ECHO is on.
+
+# Ignore all files with a specific extension
+*.tmp
