@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 
 // Registration function
 const register = async (req, res) => {
-    const { fullname, username, password } = req.body;  // Ensure 'fullname' matches the DB column
+    console.log('Received registration request:', req.body); // Log request body
+    const { fullname, username, password } = req.body; 
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -14,6 +15,7 @@ const register = async (req, res) => {
         );
         res.status(201).json({ message: "User registered successfully" });
     } catch (err) {
+        console.error('Registration error:', err); // Log error details
         res.status(500).json({ error: err.message });
     }
 };
