@@ -4,21 +4,29 @@ const jwt = require('jsonwebtoken');
 
 // Registration function
 const register = async (req, res) => {
-    console.log('Received registration request:', req.body); // Log request body
-    const { fullname, username, password } = req.body; 
+    const { fullname, username, password } = req.body;
+
+    if (!fullname || !username || !password) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    console.log('Received registration request:', req.body);
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
+        console.log('Hashed password:', hashedPassword); // Log hashed password
         const [rows] = await pool.query(
             'INSERT INTO users (fullname, username, password) VALUES (?, ?, ?)',
             [fullname, username, hashedPassword]
         );
+        console.log('User registered with ID:', rows.insertId); // Log inserted ID
         res.status(201).json({ message: "User registered successfully" });
     } catch (err) {
         console.error('Registration error:', err); // Log error details
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Registration failed. Please try again.', details: err.message });
     }
 };
+
 
 // Login function
 const login = async (req, res) => {
