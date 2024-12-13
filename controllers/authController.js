@@ -103,5 +103,46 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+// Update user function
+const updateUser = async (req, res) => {
+    const { user_id, fullname, username, password } = req.body;
+
+    // Check if all required fields are provided
+    if (!user_id || !fullname || !username) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    try {
+        // Fetch the user from the database
+        const [rows] = await pool.query('SELECT * FROM users WHERE user_id = ?', [user_id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        const user = rows[0];
+
+        // Optionally, hash the new password if provided
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;  // Update the password
+        }
+
+        // Update user fields
+        user.fullname = fullname;
+        user.username = username;
+
+        // Save the updated user data to the database
+        await pool.query(
+            'UPDATE users SET fullname = ?, username = ?, password = ? WHERE user_id = ?',
+            [user.fullname, user.username, user.password || user.password, user_id]
+        );
+
+        res.status(200).json({ message: 'User updated successfully', user });
+    } catch (err) {
+        res.status(500).json({ error: 'Error updating user', details: err.message });
+    }
+};
+
 // Export the functions
-module.exports = { register, login, deleteUser, getAllUsers };
+module.exports = { register, login, deleteUser, getAllUsers, updateUser };
